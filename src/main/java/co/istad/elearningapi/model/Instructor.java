@@ -3,6 +3,8 @@ package co.istad.elearningapi.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -20,4 +22,8 @@ public class Instructor {
     private String nationalIdCard;
     @Column(columnDefinition = "TEXT")
     private String biography;
+
+    @OneToMany(mappedBy = "instructor")
+    private List<Course> courses;
+
 }

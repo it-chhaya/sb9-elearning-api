@@ -5,6 +5,7 @@ import co.istad.elearningapi.repository.CategoryRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -12,6 +13,12 @@ import java.util.List;
 class ELearningApiTests {
 	@Autowired
 	CategoryRepository categoryRepository;
+
+	@Test
+	void test_updateCategoryName() {
+		String newName = "Data Science";
+		categoryRepository.updateCategoryName(1, newName);
+	}
 
 	@Test
 	void test_selectAllCategories() {
@@ -29,7 +36,6 @@ class ELearningApiTests {
 		List<String> categories = categoryRepository.selectCategoryNames();
 		System.out.println(categories);
 	}
-
 	@Test
 	void test_selectCategoryByNameAndIsDeleted() {
 		List<Category> categories = categoryRepository.selectCategoryByNameAndIsDeleted("Fullstack", false);

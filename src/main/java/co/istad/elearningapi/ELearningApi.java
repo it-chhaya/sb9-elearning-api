@@ -8,17 +8,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 @RequiredArgsConstructor
-public class ELearningApi implements CommandLineRunner {
+public class ELearningApi {
 
 	public static void main(String[] args) {
 		SpringApplication.run(ELearningApi.class, args);
 	}
 
-	private final InstructorService instructorService;
-
-	@Override
-	public void run(String... args) throws Exception {
-		System.out.println("Hello from console");
-		System.out.println(instructorService.findList("c"));
-	}
 }

@@ -5,12 +5,14 @@ import co.istad.elearningapi.dto.InstructorDto;
 import co.istad.elearningapi.dto.InstructorEditionDto;
 import co.istad.elearningapi.mapper.InstructorMapper;
 import co.istad.elearningapi.model.Instructor;
+import co.istad.elearningapi.repository.CategoryRepository;
 import co.istad.elearningapi.repository.InstructorRepository;
 import co.istad.elearningapi.repository.TestRepository;
 import co.istad.elearningapi.service.InstructorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
@@ -24,6 +26,7 @@ public class InstructorServiceImpl implements InstructorService {
 
     private final InstructorRepository instructorRepository;
     private final InstructorMapper instructorMapper;
+    private final CategoryRepository categoryRepository;
 
     private  <T> Predicate<T> distinctByKey(
             Function<? super T, ?> keyExtractor) {
@@ -106,8 +109,19 @@ public class InstructorServiceImpl implements InstructorService {
         instructorRepository.save(instructor);
     }
 
+    @Transactional
     @Override
     public List<InstructorDto> findList(String q) {
+
+        List<Integer> idForRemove = List.of(6, 100);
+
+        for (Integer id : idForRemove) {
+            categoryRepository.removeById(id);
+            if (id == 100) {
+                throw new RuntimeException("Id doesn't exist!");
+            }
+        }
+
         // Find from db
         List<Instructor> instructors = instructorRepository.findAll();
         return instructorMapper.toInstructorListDto(instructors);

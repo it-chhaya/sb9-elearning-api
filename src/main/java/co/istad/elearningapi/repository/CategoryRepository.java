@@ -2,7 +2,9 @@ package co.istad.elearningapi.repository;
 
 import co.istad.elearningapi.model.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -23,5 +25,21 @@ public interface CategoryRepository
 
     @Query("SELECT cate FROM Category AS cate WHERE cate.name = :name")
     List<Category> selectCategoryByName(String name);
+
+    @Transactional // Should use in service layer
+    @Modifying
+    @Query("""
+        UPDATE Category AS cate
+        SET cate.name = :newName
+        WHERE cate.id = :id
+    """)
+    void updateCategoryName(Integer id, String newName);
+    @Modifying
+    @Query("""
+        DELETE
+        FROM Category AS cate
+        WHERE cate.id = :id
+    """)
+    void removeById(Integer id);
 
 }
