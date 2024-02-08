@@ -21,6 +21,11 @@ public class Course {
     @Column(columnDefinition = "TEXT")
     private String description;
     private Boolean isFree;
+    private Boolean isDeleted;
+
+    @ManyToOne
+    @JoinColumn(name = "cat_id", referencedColumnName = "id")
+    private Category category;
 
     @ManyToOne
     @JoinColumn(name = "ins_id", referencedColumnName = "id")

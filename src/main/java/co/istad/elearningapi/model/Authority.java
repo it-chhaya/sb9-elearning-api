@@ -11,19 +11,15 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "roles")
-public class Role {
+@Table(name = "authorities")
+public class Authority {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    // USER, STUDENT, INSTRUCTOR, ADMIN
-    private String name;
+    private String name; // elearning:read, elearning:write, ...
 
-    @ManyToMany(mappedBy = "roles")
-    private List<User> users;
-
-    @ManyToMany
-    private List<Authority> authorities;
+    @ManyToMany(mappedBy = "authorities")
+    private List<Role> roles;
 }
