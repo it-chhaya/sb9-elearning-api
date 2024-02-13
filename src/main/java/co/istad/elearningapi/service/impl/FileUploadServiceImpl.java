@@ -28,7 +28,6 @@ public class FileUploadServiceImpl implements FileUploadService {
         // get last index of .
         int lastIndexOfDot = file.getOriginalFilename().lastIndexOf(".");
         String extension = file.getOriginalFilename().substring(lastIndexOfDot + 1);
-
         // Create new unique file name
         String newFileName = UUID.randomUUID() + "." + extension;
 
@@ -38,7 +37,6 @@ public class FileUploadServiceImpl implements FileUploadService {
         System.out.println(extension);*/
 
         String absolutePath = serverPath + newFileName;
-
         Path path = Paths.get(absolutePath);
         try {
             Files.copy(file.getInputStream(), path);
