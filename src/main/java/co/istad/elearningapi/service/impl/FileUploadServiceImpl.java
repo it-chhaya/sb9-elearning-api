@@ -3,13 +3,18 @@ package co.istad.elearningapi.service.impl;
 import co.istad.elearningapi.dto.FileDto;
 import co.istad.elearningapi.service.FileUploadService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -24,10 +29,7 @@ public class FileUploadServiceImpl implements FileUploadService {
     @Override
     public FileDto uploadSingle(MultipartFile file) {
 
-        // extract file extension
-        // get last index of .
-        int lastIndexOfDot = file.getOriginalFilename().lastIndexOf(".");
-        String extension = file.getOriginalFilename().substring(lastIndexOfDot + 1);
+        String extension = this.extractExtension(file.getOriginalFilename());
         // Create new unique file name
         String newFileName = UUID.randomUUID() + "." + extension;
 
@@ -50,4 +52,36 @@ public class FileUploadServiceImpl implements FileUploadService {
                 .uri(baseUri + newFileName)
                 .build();
     }
+
+    @Override
+    public List<FileDto> uploadMultiple(List<MultipartFile> files) {
+
+        List<FileDto> fileListDto = new ArrayList<>();
+
+        files.forEach(file -> {
+            fileListDto.add(this.uploadSingle(file));
+        });
+
+        return fileListDto;
+    }
+
+    @Override
+    public FileDto findByName(String name) throws IOException {
+
+        Path path = Paths.get(serverPath + name);
+        Resource res = UrlResource.from(path.toUri());
+        System.out.println("REST: " + res);
+        return FileDto.builder()
+                .name(res.getFilename())
+                .size(res.contentLength())
+                .extension(this.extractExtension(res.getFilename()))
+                .uri(baseUri + res.getFilename())
+                .build();
+    }
+
+    private String extractExtension(String fileName) {
+        int lastIndexOfDot = fileName.lastIndexOf(".");
+        return fileName.substring(lastIndexOfDot + 1);
+    }
+
 }
