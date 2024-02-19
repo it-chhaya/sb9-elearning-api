@@ -67,10 +67,8 @@ public class FileUploadServiceImpl implements FileUploadService {
 
     @Override
     public FileDto findByName(String name) throws IOException {
-
         Path path = Paths.get(serverPath + name);
         Resource res = UrlResource.from(path.toUri());
-        System.out.println("REST: " + res);
         return FileDto.builder()
                 .name(res.getFilename())
                 .size(res.contentLength())
@@ -78,7 +76,6 @@ public class FileUploadServiceImpl implements FileUploadService {
                 .uri(baseUri + res.getFilename())
                 .build();
     }
-
     private String extractExtension(String fileName) {
         int lastIndexOfDot = fileName.lastIndexOf(".");
         return fileName.substring(lastIndexOfDot + 1);
